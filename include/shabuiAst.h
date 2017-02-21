@@ -14,13 +14,21 @@ struct shabuiAst
 {
     enum shabuiNodeType nodeType;
     struct shabuiAst* next;
-    struct shabuiAsr* lhs;
-    struct shabuiAsr* rhs;
+    struct shabuiAst* lhs;
+    struct shabuiAst* rhs;
     union {
         int value;
         char* str;
     };
 };
+
+// todo: unwanted global
+struct shabuiAst *lastShabuiAst;
+
+struct shabuiAst* shabuiListAppend(
+    struct shabuiAst* list,
+    struct shabuiAst* toAdd
+);
 
 struct shabuiAst* shabuiMakeEmptyNode(enum shabuiNodeType nodeType);
 struct shabuiAst* shabuiMakeNumber(int value);

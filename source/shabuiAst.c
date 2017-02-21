@@ -3,6 +3,19 @@
 #include <string.h>
 #include "shabuiAst.h"
 
+struct shabuiAst* shabuiListAppend(
+    struct shabuiAst* list,
+    struct shabuiAst* toAdd
+)
+{
+    while (list->next)
+    {
+        list = list->next;
+    }
+
+    list->next = toAdd;
+}
+
 struct shabuiAst* shabuiMakeEmptyNode(enum shabuiNodeType nodeType)
 {
     struct shabuiAst* node = malloc(sizeof(struct shabuiAst));
