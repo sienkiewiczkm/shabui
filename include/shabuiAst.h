@@ -18,7 +18,8 @@ enum shabuiNodeType
     SB_NODE_PROGRAM_FRAGMENT,
     SB_NODE_FUNCTION_INPUTS,
     SB_NODE_FUNCTION_OUTPUTS,
-    SB_NODE_FUNCTION_CODE
+    SB_NODE_FUNCTION_CODE,
+    SB_NODE_SHARED_CODE
 };
 
 struct shabuiAst
@@ -56,5 +57,7 @@ struct shabuiAst* shabuiMakeVariableDeclaration(
     struct shabuiAst* name,
     struct shabuiAst* type
 );
+
+struct shabuiAst* shabuiMakeSharedCodeBlock(struct shabuiAst* code);
 
 #endif //__SHABUI_AST_H__

@@ -12,9 +12,12 @@
 
 "version" { return KEYWORD_VERSION; }
 "shader" { return KEYWORD_SHADER; }
+"shared" { return KEYWORD_SHARED; }
+
 "geometry" { return KEYWORD_GEOMETRY; }
 "vertex" { return KEYWORD_VERTEX; }
 "fragment" { return KEYWORD_FRAGMENT; }
+
 
 "(" { return PARENTHESIS_OPEN; }
 ")" { return PARENTHESIS_CLOSE; }

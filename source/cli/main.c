@@ -43,6 +43,9 @@ void traverseShabuiAst(struct shabuiAst* root, int depth)
             case SB_NODE_VARIABLE_DECLARATION:
                 printf("declaration\n");
                 break;
+            case SB_NODE_SHARED_CODE:
+                printf("shared code\n");
+                break;
             default:
                 printf("unknown\n");
                 break;

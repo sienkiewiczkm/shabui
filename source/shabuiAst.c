@@ -87,3 +87,11 @@ struct shabuiAst* shabuiMakeVariableDeclaration(
     node->rhs = type;
     return node;
 }
+
+struct shabuiAst* shabuiMakeSharedCodeBlock(struct shabuiAst* code)
+{
+    struct shabuiAst* node = shabuiMakeEmptyNode(SB_NODE_SHARED_CODE);
+    node->lhs = code;
+    return node;
+}
+

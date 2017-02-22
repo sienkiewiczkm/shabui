@@ -19,6 +19,7 @@ int shabuierror(const char* s);
 
 %token KEYWORD_VERSION
 %token KEYWORD_SHADER
+%token KEYWORD_SHARED
 %token KEYWORD_GEOMETRY
 %token KEYWORD_VERTEX
 %token KEYWORD_FRAGMENT
@@ -110,7 +111,11 @@ shader_properties
     ;
 
 shader_property
-    : shader_program_property shader_program_inputs COLON shader_program_outputs
+    : KEYWORD_SHARED ASSIGNMENT GLSL_BLOCK
+    {
+        $$ = shabuiMakeSharedCodeBlock($3);
+    }
+    | shader_program_property shader_program_inputs COLON shader_program_outputs
         ASSIGNMENT GLSL_BLOCK
     {
         shabuiListAppend(&$$->rhs, $2);

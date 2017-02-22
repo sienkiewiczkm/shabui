@@ -4,11 +4,15 @@ shader "Empty Shader" {};
 
 shader "Uniform Phong Shader"
 {
+    shared = <<<
+        /* this piece of code will be pasted in every shader */
+    >>>;
+
     vertex(vec3 position, vec3 normal): vec3 transformedNormal = <<<
-        this is example glsl code
+        /* vertex shader main function */
     >>>;
 
     fragment(): (vec3 a, vec3 b) = <<<
-        glsl for fragment shader
+        /* fragment shader main function */
     >>>;
 };
