@@ -3,17 +3,21 @@
 #include <string.h>
 #include "shabuiAst.h"
 
-struct shabuiAst* shabuiListAppend(
-    struct shabuiAst* list,
-    struct shabuiAst* toAdd
-)
+void shabuiListAppend(struct shabuiAst** list, struct shabuiAst* toAdd)
 {
-    while (list->next)
+    if (*list == 0)
     {
-        list = list->next;
+        *list = toAdd;
+        return;
     }
 
-    list->next = toAdd;
+    struct shabuiAst* helper = *list;
+    while (helper->next)
+    {
+        helper = helper->next;
+    }
+
+    helper->next = toAdd;
 }
 
 struct shabuiAst* shabuiMakeEmptyNode(enum shabuiNodeType nodeType)
@@ -60,5 +64,26 @@ struct shabuiAst* shabuiMakeShader(
     struct shabuiAst *node = shabuiMakeEmptyNode(SB_NODE_SHADER);
     node->lhs = name;
     node->rhs = propertyList;
+    return node;
+}
+
+struct shabuiAst* shabuiMakeVertexShader()
+{
+    return shabuiMakeEmptyNode(SB_NODE_PROGRAM_VERTEX);
+}
+
+struct shabuiAst* shabuiMakeFragmentShader()
+{
+    return shabuiMakeEmptyNode(SB_NODE_PROGRAM_FRAGMENT);
+}
+
+struct shabuiAst* shabuiMakeVariableDeclaration(
+    struct shabuiAst* name,
+    struct shabuiAst* type
+)
+{
+    struct shabuiAst *node = shabuiMakeEmptyNode(SB_NODE_VARIABLE_DECLARATION);
+    node->lhs = name;
+    node->rhs = type;
     return node;
 }

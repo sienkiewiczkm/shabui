@@ -26,7 +26,7 @@ int shabuierror(const char* s);
 %token PARENTHESIS_CLOSE
 %token BRACKET_OPEN
 %token BRACKET_CLOSE
-%token COLON SEMICOLON ASSIGNMENT
+%token COLON SEMICOLON ASSIGNMENT COMMA
 %token EOL
 %token END_OF_FILE
 
@@ -44,6 +44,12 @@ int shabuierror(const char* s);
 %type <ast> shader_properties
 %type <ast> shader_property
 %type <ast> shader_name
+%type <ast> shader_program_property
+%type <ast> shader_program_inputs
+%type <ast> shader_program_outputs
+%type <ast> parameter_list
+%type <ast> parameter_single
+%type <ast> type
 
 %start root
 
@@ -60,7 +66,7 @@ translation_unit
     : global_declaration command_separator
     | translation_unit global_declaration command_separator
     {
-        shabuiListAppend($1, $2);
+        shabuiListAppend(&$1, $2);
         $$ = $1;
     }
     ;
@@ -90,7 +96,7 @@ shader_name
     ;
 
 shader_declaration_block
-    : BRACKET_OPEN BRACKET_CLOSE
+    : BRACKET_OPEN BRACKET_CLOSE { $$ = 0; }
     | BRACKET_OPEN shader_properties BRACKET_CLOSE { $$ = $2; }
     ;
 
@@ -98,28 +104,59 @@ shader_properties
     : shader_property command_separator
     | shader_properties shader_property command_separator
     {
-        shabuiListAppend($1, $2);
+        shabuiListAppend(&$1, $2);
         $$ = $1;
     }
     ;
 
 shader_property
-    : shader_program_property shader_program_inputs ASSIGNMENT GLSL_BLOCK
+    : shader_program_property shader_program_inputs COLON shader_program_outputs
+        ASSIGNMENT GLSL_BLOCK
     {
-        $$ = $4;
+        shabuiListAppend(&$$->rhs, $2);
+        shabuiListAppend(&$$->rhs, $4);
+        shabuiListAppend(&$$->rhs, $6);
+        $$ = $1;
     }
     ;
 
 shader_program_inputs
-    : PARENTHESIS_OPEN PARENTHESIS_CLOSE
+    : PARENTHESIS_OPEN PARENTHESIS_CLOSE { $$ = 0; }
+    | PARENTHESIS_OPEN parameter_list PARENTHESIS_CLOSE { $$ = $2; }
+    ;
+
+shader_program_outputs
+    : parameter_single
+    | PARENTHESIS_OPEN parameter_list PARENTHESIS_CLOSE { $$ = $2; }
+    ;
 
 shader_program_property
-    : KEYWORD_VERTEX
-    | KEYWORD_FRAGMENT
+    : KEYWORD_VERTEX { $$ = shabuiMakeVertexShader(); }
+    | KEYWORD_FRAGMENT { $$ = shabuiMakeFragmentShader(); }
     ;
 
 command_separator
     : SEMICOLON
+    ;
+
+parameter_list
+    : parameter_single
+    | parameter_list COMMA parameter_single
+    {
+        shabuiListAppend(&$1, $3);
+        $$ = $1;
+    }
+    ;
+
+parameter_single
+    : type IDENTIFIER
+    {
+        $$ = shabuiMakeVariableDeclaration($2, $1);
+    }
+    ;
+
+type
+    : IDENTIFIER
     ;
 
 %%

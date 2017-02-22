@@ -1,10 +1,14 @@
 version 1;
-shader "Uniform Phong Shader" {
-    vertex() = <<<
+
+shader "Empty Shader" {};
+
+shader "Uniform Phong Shader"
+{
+    vertex(vec3 position, vec3 normal): vec3 transformedNormal = <<<
         this is example glsl code
     >>>;
 
-    fragment() = <<<
+    fragment(): (vec3 a, vec3 b) = <<<
         glsl for fragment shader
     >>>;
 };

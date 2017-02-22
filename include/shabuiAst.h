@@ -9,6 +9,7 @@ enum shabuiNodeType
     SB_NODE_STRING_LITERAL,
     SB_NODE_GLSL_CODE,
     SB_NODE_VERSION,
+    SB_NODE_VARIABLE_DECLARATION,
     SB_NODE_SHADER,
     SB_NODE_PROGRAM_VERTEX,
     SB_NODE_PROGRAM_TESS_CONTROL,
@@ -35,19 +36,25 @@ struct shabuiAst
 // todo: unwanted global
 struct shabuiAst *lastShabuiAst;
 
-struct shabuiAst* shabuiListAppend(
-    struct shabuiAst* list,
-    struct shabuiAst* toAdd
-);
+void shabuiListAppend(struct shabuiAst** list, struct shabuiAst* toAdd);
 
 struct shabuiAst* shabuiMakeEmptyNode(enum shabuiNodeType nodeType);
 struct shabuiAst* shabuiMakeNumber(int value);
 struct shabuiAst* shabuiMakeString(const char* str);
 struct shabuiAst* shabuiMakeVersion(int major);
 struct shabuiAst* shabuiMakePropertyList();
+
 struct shabuiAst* shabuiMakeShader(
     struct shabuiAst* name,
     struct shabuiAst* propertyList
+);
+
+struct shabuiAst* shabuiMakeVertexShader();
+struct shabuiAst* shabuiMakeFragmentShader();
+
+struct shabuiAst* shabuiMakeVariableDeclaration(
+    struct shabuiAst* name,
+    struct shabuiAst* type
 );
 
 #endif //__SHABUI_AST_H__

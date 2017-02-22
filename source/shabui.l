@@ -20,6 +20,7 @@
 ")" { return PARENTHESIS_CLOSE; }
 "{" { return BRACKET_OPEN; }
 "}" { return BRACKET_CLOSE; }
+"," { return COMMA; }
 ":" { return COLON; }
 ";" { return SEMICOLON; }
 "=" { return ASSIGNMENT; }
