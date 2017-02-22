@@ -23,13 +23,13 @@ void traverseShabuiAst(struct shabuiAst* root, int depth)
         switch (root->nodeType)
         {
             case SB_NODE_STRING_LITERAL:
-                printf("string: \"%s\"\n", root->str);
+                printf("string =: \"%s\"\n", root->str);
                 break;
             case SB_NODE_NUMBER:
-                printf("number: %d\n", root->value);
+                printf("number =: %d\n", root->value);
                 break;
             case SB_NODE_VERSION:
-                printf("version\n");
+                printf("version = %d\n", root->value);
                 break;
             case SB_NODE_SHADER:
                 printf("shader\n");
@@ -39,13 +39,20 @@ void traverseShabuiAst(struct shabuiAst* root, int depth)
                 break;
         }
 
-        indent(depth); printf("lhs:\n");
-        traverseShabuiAst(root->lhs, depth + 1);
+        if (root->lhs)
+        {
+            indent(depth); printf("lhs:\n");
+            traverseShabuiAst(root->lhs, depth + 1);
+        }
 
-        indent(depth); printf("rhs:\n");
-        traverseShabuiAst(root->rhs, depth + 1);
+        if (root->rhs)
+        {
+            indent(depth); printf("rhs:\n");
+            traverseShabuiAst(root->rhs, depth + 1);
+        }
 
         root = root->next;
+
     } while(root);
 }
 

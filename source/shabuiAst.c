@@ -41,17 +41,24 @@ struct shabuiAst* shabuiMakeNumber(int value)
 struct shabuiAst* shabuiMakeString(const char* str)
 {
     struct shabuiAst *node = shabuiMakeEmptyNode(SB_NODE_STRING_LITERAL);
-
-    int stringLength = strlen(str);
-    node->str = malloc((stringLength+1)*sizeof(char));
-    strcpy(node->str, str);
-
+    node->str = strdup(str);
     return node;
 }
 
-struct shabuiAst* shabuiMakeVersion(struct shabuiAst* versionNumber)
+struct shabuiAst* shabuiMakeVersion(int major)
 {
     struct shabuiAst *node = shabuiMakeEmptyNode(SB_NODE_VERSION);
-    node->lhs = versionNumber;
+    node->value = major;
+    return node;
+}
+
+struct shabuiAst* shabuiMakeShader(
+    struct shabuiAst* name,
+    struct shabuiAst* propertyList
+)
+{
+    struct shabuiAst *node = shabuiMakeEmptyNode(SB_NODE_SHADER);
+    node->lhs = name;
+    node->rhs = propertyList;
     return node;
 }
