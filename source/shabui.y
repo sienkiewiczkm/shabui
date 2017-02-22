@@ -6,6 +6,10 @@
 #include "shabuiAst.h"
 
 struct shabuiAst *lastShabuiAst;
+
+/* forward declarations to fix warnings */
+int shabuilex();
+int shabuierror(const char* s);
 %}
 
 %union {
@@ -121,7 +125,7 @@ command_separator
 %%
 
 
-int shabuierror(char* s)
+int shabuierror(const char* s)
 {
     fprintf(stderr, "error: %s", s);
     return 0;
