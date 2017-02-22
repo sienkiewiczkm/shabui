@@ -1,0 +1,10 @@
+version 1;
+shader "Uniform Phong Shader" {
+    vertex() = <<<
+        this is example glsl code
+    >>>;
+
+    fragment() = <<<
+        glsl for fragment shader
+    >>>;
+};
