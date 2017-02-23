@@ -7,20 +7,20 @@ find_package(FLEX REQUIRED)
 find_package(BISON REQUIRED)
 
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/source)
+
 bison_target(ShabuiParser
-    ${PROJECT_SOURCE_DIR}/source/shabui.y
-    ${PROJECT_BINARY_DIR}/source/shabuiparser.c
+    ${PROJECT_SOURCE_DIR}/source/shabuiParser.y
+    ${PROJECT_BINARY_DIR}/source/shabuiParser.cxx
 )
 
 flex_target(ShabuiScanner
-    ${PROJECT_SOURCE_DIR}/source/shabui.l
-    ${PROJECT_BINARY_DIR}/source/shabuiscanner.c
+    ${PROJECT_SOURCE_DIR}/source/shabuiScanner.l
+    ${PROJECT_BINARY_DIR}/source/shabuiScanner.cxx
 )
 
 add_flex_bison_dependency(ShabuiScanner ShabuiParser)
 
 add_library(${PROJECT_NAME_LIB}
-    source/shabuiAst.c
     ${BISON_ShabuiParser_OUTPUTS}
     ${FLEX_ShabuiScanner_OUTPUTS}
 )
@@ -31,7 +31,7 @@ target_include_directories(${PROJECT_NAME_LIB}
 )
 
 add_executable(${PROJECT_NAME}
-    ${PROJECT_SOURCE_DIR}/source/cli/main.c
+    ${PROJECT_SOURCE_DIR}/source/cli/main.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
