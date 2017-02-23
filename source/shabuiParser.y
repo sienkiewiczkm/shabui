@@ -44,17 +44,25 @@
 %token <std::string> IDENTIFIER
 %token <std::string> STRING_LITERAL
 %token <std::string> GLSL_CODE_BLOCK
+%token <std::string> GLSL_TYPE
 
 %token VERSION SHADER FUNC SHARED GLSL
 %token COLON
-%token GLSL_TYPE
 
 %token <int> INTEGER_CONSTANT
 
 %type <std::string> shader_name
 %type <std::string> shader_shared_code_property
 
+%type <FunctionDefinition> function_definition
+
 %type <ShaderDefinition> shader_definition shader_properties_list
+
+%type <std::vector<VariableDefinition>> optional_variables_definition_list
+%type <std::vector<VariableDefinition>> variables_definition_list
+%type <VariableDefinition> variable_definition
+
+%type <std::string> var_type
 
 %start root
 
@@ -100,10 +108,58 @@ shader_properties_list
         $$ = $1;
         $$.sharedCode = $2;
     }
+    | shader_properties_list function_definition command_separator
+    {
+        $$ = $1;
+        enlist($$.functions, $2);
+    }
     ;
 
 shader_shared_code_property
     : SHARED GLSL_CODE_BLOCK { $$ = $2; }
+    ;
+
+function_definition
+    : FUNC IDENTIFIER '(' optional_variables_definition_list ')' ':'
+        variable_definition GLSL_CODE_BLOCK
+    {
+        $$ = FunctionDefinition{};
+        $$.name = $2;
+        $$.inputVariables = $4;
+        $$.outputVariables = {$7};
+        $$.code = $8;
+    }
+    | FUNC IDENTIFIER '(' optional_variables_definition_list ')' ':'
+        '(' variables_definition_list ')' GLSL_CODE_BLOCK
+    {
+        $$ = FunctionDefinition{};
+        $$.name = $2;
+        $$.inputVariables = $4;
+        $$.outputVariables = $8;
+        $$.code = $10;
+    }
+    ;
+
+optional_variables_definition_list
+    : %empty { $$ = {}; }
+    | variables_definition_list { $$ = $1; }
+    ;
+
+variables_definition_list
+    : variable_definition { $$ = {$1}; }
+    | variables_definition_list ',' variable_definition
+    {
+        $$ = $1;
+        enlist($$, $3);
+    }
+    ;
+
+variable_definition
+    : var_type IDENTIFIER { $$ = VariableDefinition{$2, $1}; }
+    ;
+
+var_type
+    : GLSL_TYPE { $$ = $1; }
     ;
 
 version_marker

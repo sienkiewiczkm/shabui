@@ -23,6 +23,7 @@ add_flex_bison_dependency(ShabuiScanner ShabuiParser)
 add_library(${PROJECT_NAME_LIB}
     source/stringUtils.cpp
     source/parserOutput.cpp
+    source/shabuiAst.cpp
     ${BISON_ShabuiParser_OUTPUTS}
     ${FLEX_ShabuiScanner_OUTPUTS}
 )

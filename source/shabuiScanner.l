@@ -36,13 +36,13 @@
 "func"    { YIELD_TOKEN_MARKER(FUNC); }
 "glsl"    { YIELD_TOKEN_MARKER(GLSL); }
 
-"void"                   { YIELD_TOKEN_MARKER(GLSL_TYPE); }
-"bool"                   { YIELD_TOKEN_MARKER(GLSL_TYPE); }
-"float"                  { YIELD_TOKEN_MARKER(GLSL_TYPE); }
-"double"                 { YIELD_TOKEN_MARKER(GLSL_TYPE); }
-[u]?"int"                { YIELD_TOKEN_MARKER(GLSL_TYPE); }
-[d]?"mat"[2-4]("x"[2-4]) { YIELD_TOKEN_MARKER(GLSL_TYPE); }
-[dbiu]?"vec"[2-4]        { YIELD_TOKEN_MARKER(GLSL_TYPE); }
+"void"                   { YIELD_STRING(GLSL_TYPE); }
+"bool"                   { YIELD_STRING(GLSL_TYPE); }
+"float"                  { YIELD_STRING(GLSL_TYPE); }
+"double"                 { YIELD_STRING(GLSL_TYPE); }
+[u]?"int"                { YIELD_STRING(GLSL_TYPE); }
+[d]?"mat"[2-4]("x"[2-4]) { YIELD_STRING(GLSL_TYPE); }
+[dbiu]?"vec"[2-4]        { YIELD_STRING(GLSL_TYPE); }
 
 \"(\\.|[^\\"])*\" {
     auto text = stripKnownEndings(YY_STRING, "\"", "\"");
