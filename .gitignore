@@ -1,0 +1,19 @@
+# Default CMake directories
+untracked
+build
+
+# vim temporary files
+*.swo
+*.swn
+*.swp
+
+# temporary files
+*~
+
+# CLion
+.idea/
+
+# YCM files
+.ycm_extra*
+
+.DS_Store
