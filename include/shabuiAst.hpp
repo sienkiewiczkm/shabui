@@ -23,10 +23,17 @@ struct FunctionDefinition
     std::string code;
 };
 
+struct StructureDefinition
+{
+    std::string name;
+    std::vector<VariableDefinition> members;
+};
+
 struct ShaderDefinition
 {
     std::string name;
     std::string sharedCode;
+    std::vector<StructureDefinition> structures;
     std::vector<FunctionDefinition> functions;
 };
 

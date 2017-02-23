@@ -46,7 +46,7 @@
 %token <std::string> GLSL_CODE_BLOCK
 %token <std::string> GLSL_TYPE
 
-%token VERSION SHADER FUNC SHARED GLSL
+%token VERSION SHADER FUNC SHARED GLSL STRUCT
 %token COLON
 
 %token <int> INTEGER_CONSTANT
@@ -54,9 +54,10 @@
 %type <std::string> shader_name
 %type <std::string> shader_shared_code_property
 
-%type <FunctionDefinition> function_definition
-
 %type <ShaderDefinition> shader_definition shader_properties_list
+
+%type <FunctionDefinition> function_definition
+%type <StructureDefinition> struct_definition
 
 %type <std::vector<VariableDefinition>> optional_variables_definition_list
 %type <std::vector<VariableDefinition>> variables_definition_list
@@ -113,6 +114,11 @@ shader_properties_list
         $$ = $1;
         enlist($$.functions, $2);
     }
+    | shader_properties_list struct_definition command_separator
+    {
+        $$ = $1;
+        enlist($$.structures, $2);
+    }
     ;
 
 shader_shared_code_property
@@ -140,6 +146,15 @@ function_definition
     }
     ;
 
+struct_definition
+    : STRUCT IDENTIFIER '{' variables_definition_list '}'
+    {
+        $$ = StructureDefinition{};
+        $$.name = $2;
+        $$.members = $4;
+    }
+    ;
+
 optional_variables_definition_list
     : %empty { $$ = {}; }
     | variables_definition_list { $$ = $1; }
@@ -160,6 +175,7 @@ variable_definition
 
 var_type
     : GLSL_TYPE { $$ = $1; }
+    | IDENTIFIER { $$ = $1; }
     ;
 
 version_marker

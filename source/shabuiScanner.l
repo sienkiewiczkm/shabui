@@ -35,6 +35,7 @@
 "shared"  { YIELD_TOKEN_MARKER(SHARED); }
 "func"    { YIELD_TOKEN_MARKER(FUNC); }
 "glsl"    { YIELD_TOKEN_MARKER(GLSL); }
+"struct"  { YIELD_TOKEN_MARKER(STRUCT); }
 
 "void"                   { YIELD_STRING(GLSL_TYPE); }
 "bool"                   { YIELD_STRING(GLSL_TYPE); }

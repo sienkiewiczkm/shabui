@@ -40,6 +40,17 @@ void ParserOutput::addShaderDefinition(const ShaderDefinition& shaderDefinition)
 
         std::cout << "\tcode: " << functionDef.code << std::endl;
     }
+
+    for (const auto& structDef: shaderDefinition.structures)
+    {
+        std::cout << "\tstructure: " << structDef.name << std::endl;
+        std::cout << "\t\tmembers: " << std::endl;
+        for (const auto& var: structDef.members)
+        {
+            std::cout << "\t\t\ttype=" << var.type
+                << " name=" << var.name << std::endl;
+        }
+    }
 }
 
 }
