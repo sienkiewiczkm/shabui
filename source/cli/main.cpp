@@ -4,13 +4,11 @@
 #include "shabuiParser.hxx"
 #include "shabuiScanner.hpp"
 #include "shabuiAst.hpp"
+#include "stringUtils.hpp"
 
 int main(int argc, char **argv)
 {
-    std::string filecontents = "version";
-    std::istringstream ss(filecontents);
-
-    sb::shabuiScanner scanner(&ss);
+    sb::shabuiScanner scanner(&std::cin);
     sb::shabuiParser parser(&scanner, nullptr);
 
     try

@@ -43,10 +43,14 @@
     }
 }
 
-%token VERSION
-%token COLON
-%token EOL
 %token END 0 "end of file"
+
+%token <std::string> STRING_LITERAL
+%token <std::string> GLSL_CODE_BLOCK
+
+%token VERSION SHADER FUNC SHARED
+%token COLON
+%token GLSL_TYPE
 
 %token <int> INTEGER_CONSTANT
 %start root
@@ -54,7 +58,9 @@
 %%
 
 root
-    : VERSION { std::cerr << "keyword version found"; }
+    : VERSION { std::cerr << "keyword version found" << std::endl; }
+    | STRING_LITERAL { std::cerr << "found string: " << $1 << std::endl; }
+    | GLSL_CODE_BLOCK { std::cerr << "found code: " << $1 << std::endl; }
     ;
 
 %%

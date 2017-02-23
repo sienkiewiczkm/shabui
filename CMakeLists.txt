@@ -21,8 +21,14 @@ flex_target(ShabuiScanner
 add_flex_bison_dependency(ShabuiScanner ShabuiParser)
 
 add_library(${PROJECT_NAME_LIB}
+    source/stringUtils.cpp
     ${BISON_ShabuiParser_OUTPUTS}
     ${FLEX_ShabuiScanner_OUTPUTS}
+)
+
+target_compile_features(${PROJECT_NAME_LIB}
+    PUBLIC cxx_auto_type
+    PUBLIC cxx_rvalue_references
 )
 
 target_include_directories(${PROJECT_NAME_LIB}
