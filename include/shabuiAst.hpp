@@ -37,4 +37,11 @@ struct ShaderDefinition
     std::vector<FunctionDefinition> functions;
 };
 
+struct ShabuiGlobalScope
+{
+    int glslVersion;
+    std::string glslProfileName;
+    std::vector<ShaderDefinition> shaders;
+};
+
 }

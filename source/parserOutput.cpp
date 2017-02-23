@@ -11,12 +11,17 @@ void ParserOutput::setVersion(int major)
 
 void ParserOutput::setGLSLVersion(int major, std::string profile)
 {
+    _globalScope.glslVersion = major;
+    _globalScope.glslProfileName = profile;
+
     std::cout << "glsl version registered: " << major << " profile: " << profile
         << std::endl;
 }
 
 void ParserOutput::addShaderDefinition(const ShaderDefinition& shaderDefinition)
 {
+    _globalScope.shaders.push_back(shaderDefinition);
+
     std::cout << "shader registered: " << shaderDefinition.name << std::endl;
     std::cout << "\tshared code:" << shaderDefinition.sharedCode << std::endl;
 
