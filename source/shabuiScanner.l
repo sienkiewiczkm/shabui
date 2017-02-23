@@ -34,6 +34,7 @@
 "shader"  { YIELD_TOKEN_MARKER(SHADER); }
 "shared"  { YIELD_TOKEN_MARKER(SHARED); }
 "func"    { YIELD_TOKEN_MARKER(FUNC); }
+"glsl"    { YIELD_TOKEN_MARKER(GLSL); }
 
 "void"                   { YIELD_TOKEN_MARKER(GLSL_TYPE); }
 "bool"                   { YIELD_TOKEN_MARKER(GLSL_TYPE); }
@@ -53,9 +54,16 @@
     YIELD_TOKEN(GLSL_CODE_BLOCK, text, std::string);
 }
 
+[0-9]+ {
+    int value = std::stoi(YY_STRING);
+    YIELD_TOKEN(INTEGER_CONSTANT, value, int);
+}
+
+[_a-zA-Z]+[_a-zA-Z0-9]* { YIELD_STRING(IDENTIFIER); }
+
 [ \r\t]* { /* ignore whitespace */ }
 \n|\r\n { yylloc->lines(1); }
-. { fprintf(stderr, "Unrecognized character: %c\n", *yytext); }
+. { return yytext[0]; }
 
 %%
 
