@@ -15,4 +15,10 @@ void ParserOutput::setGLSLVersion(int major, std::string profile)
         << std::endl;
 }
 
+void ParserOutput::addShaderDefinition(const ShaderDefinition& shaderDefinition)
+{
+    std::cout << "shader registered: " << shaderDefinition.name << std::endl;
+    std::cout << "\tshared code:" << shaderDefinition.sharedCode << std::endl;
+}
+
 }

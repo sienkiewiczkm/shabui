@@ -51,6 +51,11 @@
 
 %token <int> INTEGER_CONSTANT
 
+%type <std::string> shader_name
+%type <std::string> shader_shared_code_property
+
+%type <ShaderDefinition> shader_definition shader_properties_list
+
 %start root
 
 %%
@@ -67,8 +72,38 @@ global_statements_list
 
 global_statement
     : version_marker
+    | shader_definition { cb->addShaderDefinition($1); }
     | STRING_LITERAL { std::cerr << "found string: " << $1 << std::endl; }
     | GLSL_CODE_BLOCK { std::cerr << "found code: " << $1 << std::endl; }
+    ;
+
+shader_definition
+    : SHADER shader_name '{' shader_properties_list '}'
+    {
+        $$ = $4;
+        $$.name = $2;
+    }
+    ;
+
+shader_name
+    : IDENTIFIER { $$ = $1; }
+    | STRING_LITERAL { $$ = $1; }
+    ;
+
+shader_properties_list
+    : %empty
+    {
+        $$ = ShaderDefinition{};
+    }
+    | shader_properties_list shader_shared_code_property command_separator
+    {
+        $$ = $1;
+        $$.sharedCode = $2;
+    }
+    ;
+
+shader_shared_code_property
+    : SHARED GLSL_CODE_BLOCK { $$ = $2; }
     ;
 
 version_marker
