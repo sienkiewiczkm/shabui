@@ -1,4 +1,4 @@
-#include "stringUtils.hpp"
+#include "StringUtils.hpp"
 
 std::string stripKnownEndings(
     const std::string& str,

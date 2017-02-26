@@ -1,5 +1,5 @@
 #include <iostream>
-#include "parserOutput.hpp"
+#include "ParserOutput.hpp"
 
 namespace sb
 {

@@ -5,9 +5,9 @@
 %{
 #include <stdexcept>
 #include <cstdlib>
-#include "shabuiParser.hxx"
-#include "shabuiScanner.hpp"
-#include "stringUtils.hpp"
+#include "ShabuiParser.hxx"
+#include "ShabuiScanner.hpp"
+#include "StringUtils.hpp"
 
 #if __cplusplus > 199711L
 #define register // Deprecated in C++11.

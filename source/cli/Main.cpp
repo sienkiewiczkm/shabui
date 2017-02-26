@@ -1,10 +1,10 @@
 #include <cstdio>
 #include <string>
 #include <sstream>
-#include "shabuiParser.hxx"
-#include "shabuiScanner.hpp"
-#include "shabuiAst.hpp"
-#include "stringUtils.hpp"
+#include "ShabuiParser.hxx"
+#include "ShabuiScanner.hpp"
+#include "ShabuiAst.hpp"
+#include "StringUtils.hpp"
 
 int main(int argc, char **argv)
 {
