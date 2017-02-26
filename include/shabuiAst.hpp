@@ -6,13 +6,29 @@
 namespace sb
 {
 
+enum class TypeCategory
+{
+    Unknown,
+    Primitive,
+    UserDefined
+};
+
+struct TypeDescription
+{
+    TypeDescription();
+    TypeDescription(const std::string& name, TypeCategory category);
+
+    std::string name;
+    TypeCategory category;
+};
+
 struct VariableDefinition
 {
     VariableDefinition();
-    VariableDefinition(const std::string& name, const std::string &type);
+    VariableDefinition(const std::string& name, const TypeDescription& type);
 
     std::string name;
-    std::string type;
+    TypeDescription type;
 };
 
 struct FunctionDefinition

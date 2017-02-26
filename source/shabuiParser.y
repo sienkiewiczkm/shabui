@@ -63,7 +63,7 @@
 %type <std::vector<VariableDefinition>> variables_definition_list
 %type <VariableDefinition> variable_definition
 
-%type <std::string> var_type
+%type <TypeDescription> var_type
 
 %start root
 
@@ -174,8 +174,8 @@ variable_definition
     ;
 
 var_type
-    : GLSL_TYPE { $$ = $1; }
-    | IDENTIFIER { $$ = $1; }
+    : GLSL_TYPE { $$ = TypeDescription{$1, TypeCategory::Primitive}; }
+    | IDENTIFIER { $$ = TypeDescription{$1, TypeCategory::UserDefined}; }
     ;
 
 version_marker

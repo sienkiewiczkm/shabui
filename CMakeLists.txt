@@ -24,8 +24,6 @@ add_library(${PROJECT_NAME_LIB}
     source/stringUtils.cpp
     source/parserOutput.cpp
     source/shabuiAst.cpp
-    source/shaderGeneratorBase.cpp
-    source/shaderGenerators.cpp
     ${BISON_ShabuiParser_OUTPUTS}
     ${FLEX_ShabuiScanner_OUTPUTS}
 )
