@@ -22,6 +22,15 @@ struct TypeDescription
     TypeCategory category;
 };
 
+struct VariableProperty
+{
+    VariableProperty();
+    VariableProperty(const std::string& name, const std::string& value);
+
+    std::string name;
+    std::string value;
+};
+
 struct VariableDefinition
 {
     VariableDefinition();
@@ -29,6 +38,7 @@ struct VariableDefinition
 
     std::string name;
     TypeDescription type;
+    std::vector<VariableProperty> properties;
 };
 
 struct FunctionDefinition
@@ -51,9 +61,12 @@ struct ShaderDefinition
     std::string sharedCode;
     std::vector<StructureDefinition> structures;
     std::vector<FunctionDefinition> functions;
+
+    const StructureDefinition* getStructure(const std::string& name) const;
+    const FunctionDefinition* getFunction(const std::string& name) const;
 };
 
-struct ShabuiGlobalScope
+struct ShabuiScope
 {
     int glslVersion;
     std::string glslProfileName;

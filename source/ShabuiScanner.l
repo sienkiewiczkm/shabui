@@ -37,6 +37,8 @@
 "glsl"    { YIELD_TOKEN_MARKER(GLSL); }
 "struct"  { YIELD_TOKEN_MARKER(STRUCT); }
 
+"location" { YIELD_STRING(LOCATION); }
+
 "void"                   { YIELD_STRING(GLSL_TYPE); }
 "bool"                   { YIELD_STRING(GLSL_TYPE); }
 "float"                  { YIELD_STRING(GLSL_TYPE); }

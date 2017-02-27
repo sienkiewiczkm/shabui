@@ -21,9 +21,10 @@ flex_target(ShabuiScanner
 add_flex_bison_dependency(ShabuiScanner ShabuiParser)
 
 add_library(${PROJECT_NAME_LIB}
-    source/StringUtils.cpp
+    source/GLSLCodeBuilder.cpp
     source/ParserOutput.cpp
     source/ShabuiAst.cpp
+    source/StringUtils.cpp
     ${BISON_ShabuiParser_OUTPUTS}
     ${FLEX_ShabuiScanner_OUTPUTS}
 )

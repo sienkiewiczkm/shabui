@@ -5,6 +5,7 @@
 #include "ShabuiScanner.hpp"
 #include "ShabuiAst.hpp"
 #include "StringUtils.hpp"
+#include "GLSLCodeBuilder.hpp"
 
 int main(int argc, char **argv)
 {
@@ -17,6 +18,18 @@ int main(int argc, char **argv)
     try
     {
         parser.parse();
+
+        sb::GLSLCodeBuilder builder;
+        auto result = builder.build(
+            output->getGlobalScope(),
+            output->getGlobalScope().shaders[0]
+        );
+
+        std::cerr << "Vertex Shader Output:" << std::endl;
+        std::cerr << result.vertexShaderCode << std::endl;
+
+        std::cerr << std::endl << "Fragment Shader Output:" << std::endl;
+        std::cerr << result.fragmentShaderCode << std::endl;
     }
     catch (sb::shabuiParser::syntax_error& e)
     {

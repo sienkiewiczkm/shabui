@@ -45,6 +45,7 @@
 %token <std::string> STRING_LITERAL
 %token <std::string> GLSL_CODE_BLOCK
 %token <std::string> GLSL_TYPE
+%token <std::string> LOCATION
 
 %token VERSION SHADER FUNC SHARED GLSL STRUCT
 %token COLON
@@ -62,6 +63,7 @@
 %type <std::vector<VariableDefinition>> optional_variables_definition_list
 %type <std::vector<VariableDefinition>> variables_definition_list
 %type <VariableDefinition> variable_definition
+%type <VariableProperty> var_property
 
 %type <TypeDescription> var_type
 
@@ -171,11 +173,23 @@ variables_definition_list
 
 variable_definition
     : var_type IDENTIFIER { $$ = VariableDefinition{$2, $1}; }
+    | var_type IDENTIFIER '{' var_property '}'
+    {
+        $$ = VariableDefinition{$2, $1};
+        $$.properties.push_back($4);
+    }
     ;
 
 var_type
     : GLSL_TYPE { $$ = TypeDescription{$1, TypeCategory::Primitive}; }
     | IDENTIFIER { $$ = TypeDescription{$1, TypeCategory::UserDefined}; }
+    ;
+
+var_property
+    : LOCATION '=' INTEGER_CONSTANT
+    {
+        $$ = VariableProperty{$1, std::to_string($3)};
+    }
     ;
 
 version_marker
