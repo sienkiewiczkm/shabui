@@ -1,4 +1,4 @@
-#include "StringUtils.hpp"
+#include "shabui/StringUtils.hpp"
 
 std::string stripKnownEndings(
     const std::string& str,

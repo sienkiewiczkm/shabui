@@ -1,10 +1,10 @@
 #include <fstream>
 #include <memory>
 #include <stdexcept>
-#include "GLSLLoader.hpp"
-#include "GLSLCodeBuilder.hpp"
-#include "ShabuiParser.hxx"
-#include "ShabuiScanner.hpp"
+#include "shabui/GLSLLoader.hpp"
+#include "shabui/GLSLCodeBuilder.hpp"
+#include "shabui/ShabuiParser.hxx"
+#include "shabui/ShabuiScanner.hpp"
 
 namespace sb
 {

@@ -2,7 +2,7 @@
 
 #undef yyFlexLexer
 #include <FlexLexer.h>
-#include "ShabuiParser.hxx"
+#include "shabui/ShabuiParser.hxx"
 
 #undef YY_DECL
 #define YY_DECL int sb::shabuiScanner::lex( \

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include "GLSLLoader.hpp"
+#include "shabui/GLSLLoader.hpp"
 
 int main(int argc, char **argv)
 {

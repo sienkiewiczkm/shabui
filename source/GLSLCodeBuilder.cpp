@@ -1,6 +1,6 @@
 #include <iostream>
 #include <regex>
-#include "GLSLCodeBuilder.hpp"
+#include "shabui/GLSLCodeBuilder.hpp"
 
 namespace sb
 {

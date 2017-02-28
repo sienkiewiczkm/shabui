@@ -12,9 +12,9 @@
 %code requires {
     #include <stdexcept>
     #include <string>
-    #include "ShabuiAst.hpp"
-    #include "ParserOutput.hpp"
-    #include "location.hh"
+    #include "shabui/ShabuiAst.hpp"
+    #include "shabui/ParserOutput.hpp"
+    #include "shabui/location.hh"
 
     namespace sb
     {
@@ -27,7 +27,7 @@
     #include <utility>
     #include <string>
     #include <sstream>
-    #include "ShabuiScanner.hpp"
+    #include "shabui/ShabuiScanner.hpp"
     #undef yylex
     #define yylex scanner->lex
 
