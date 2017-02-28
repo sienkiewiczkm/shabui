@@ -47,7 +47,7 @@
 %token <std::string> GLSL_TYPE
 %token <std::string> LOCATION
 
-%token VERSION SHADER FUNC SHARED GLSL STRUCT
+%token VERSION SHADER FUNC SHARED GLSL STRUCT REQUIRES
 %token COLON
 
 %token <int> INTEGER_CONSTANT
@@ -59,6 +59,10 @@
 
 %type <FunctionDefinition> function_definition
 %type <StructureDefinition> struct_definition
+
+%type <std::vector<std::string>> requirements_block_opt
+%type <std::vector<std::string>> requirements_block
+%type <std::vector<std::string>> identifier_list
 
 %type <std::vector<VariableDefinition>> optional_variables_definition_list
 %type <std::vector<VariableDefinition>> variables_definition_list
@@ -83,9 +87,8 @@ global_statements_list
 
 global_statement
     : version_marker
+    | function_definition { cb->addFunctionDefinition($1); }
     | shader_definition { cb->addShaderDefinition($1); }
-    | STRING_LITERAL { std::cerr << "found string: " << $1 << std::endl; }
-    | GLSL_CODE_BLOCK { std::cerr << "found code: " << $1 << std::endl; }
     ;
 
 shader_definition
@@ -129,22 +132,42 @@ shader_shared_code_property
 
 function_definition
     : FUNC IDENTIFIER '(' optional_variables_definition_list ')' ':'
-        variable_definition GLSL_CODE_BLOCK
+        variable_definition GLSL_CODE_BLOCK requirements_block_opt
     {
         $$ = FunctionDefinition{};
         $$.name = $2;
         $$.inputVariables = $4;
         $$.outputVariables = {$7};
         $$.code = $8;
+        $$.requirements = $9;
     }
     | FUNC IDENTIFIER '(' optional_variables_definition_list ')' ':'
-        '(' variables_definition_list ')' GLSL_CODE_BLOCK
+        '(' variables_definition_list ')' GLSL_CODE_BLOCK requirements_block_opt
     {
         $$ = FunctionDefinition{};
         $$.name = $2;
         $$.inputVariables = $4;
         $$.outputVariables = $8;
         $$.code = $10;
+        $$.requirements = $11;
+    }
+    ;
+
+requirements_block_opt
+    : %empty { $$ = {}; }
+    | requirements_block { $$ = $1; }
+    ;
+
+requirements_block
+    : REQUIRES '{' identifier_list '}' { $$ = $3; }
+    ;
+
+identifier_list
+    : IDENTIFIER { $$ = {$1}; }
+    | identifier_list ',' IDENTIFIER
+    {
+        $$ = $1;
+        $$.push_back($3);
     }
     ;
 

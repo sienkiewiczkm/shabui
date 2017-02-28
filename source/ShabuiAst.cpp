@@ -90,4 +90,25 @@ const FunctionDefinition* ShaderDefinition::getFunction(
     return &(*item);
 }
 
+const FunctionDefinition* ShabuiScope::getFunction(
+    const std::string& name
+) const
+{
+    auto item = std::find_if(
+        std::begin(functions),
+        std::end(functions),
+        [&name](const FunctionDefinition& funcDef)
+        {
+            return name == funcDef.name;
+        }
+    );
+
+    if (item == std::end(functions))
+    {
+        return nullptr;
+    }
+
+    return &(*item);
+}
+
 }

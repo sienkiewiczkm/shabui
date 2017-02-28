@@ -50,8 +50,10 @@ private:
 
     std::string buildHeader();
     std::string buildSharedCodeSection();
-    std::string buildDependencies();
+    std::string buildDependencies(const FunctionDefinition& funcDef);
+
     std::string buildMain();
+    std::string buildFunction(const FunctionDefinition& funcDef);
 
     void buildInputsOutputs();
 

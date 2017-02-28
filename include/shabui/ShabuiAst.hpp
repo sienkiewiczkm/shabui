@@ -46,6 +46,7 @@ struct FunctionDefinition
     std::string name;
     std::vector<VariableDefinition> inputVariables;
     std::vector<VariableDefinition> outputVariables;
+    std::vector<std::string> requirements;
     std::string code;
 };
 
@@ -70,7 +71,10 @@ struct ShabuiScope
 {
     int glslVersion;
     std::string glslProfileName;
+    std::vector<FunctionDefinition> functions;
     std::vector<ShaderDefinition> shaders;
+
+    const FunctionDefinition* getFunction(const std::string& name) const;
 };
 
 }

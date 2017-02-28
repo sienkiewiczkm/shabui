@@ -36,6 +36,7 @@
 "func"    { YIELD_TOKEN_MARKER(FUNC); }
 "glsl"    { YIELD_TOKEN_MARKER(GLSL); }
 "struct"  { YIELD_TOKEN_MARKER(STRUCT); }
+"requires" { YIELD_TOKEN_MARKER(REQUIRES); }
 
 "location" { YIELD_STRING(LOCATION); }
 

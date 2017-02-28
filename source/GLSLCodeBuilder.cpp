@@ -84,7 +84,6 @@ std::string GLSLCodeBuilder::buildCurrentAsStandardShader()
 
     ss << buildHeader() << std::endl;
     ss << buildSharedCodeSection() << std::endl;
-    ss << buildDependencies() << std::endl;
     ss << buildMain() << std::endl;
 
     return ss.str();
@@ -109,9 +108,25 @@ std::string GLSLCodeBuilder::buildSharedCodeSection()
     return _shaderDef->sharedCode;
 }
 
-std::string GLSLCodeBuilder::buildDependencies()
+std::string GLSLCodeBuilder::buildDependencies(
+    const FunctionDefinition& funcDef
+)
 {
-    return "/* dependencies code placeholder */";
+    std::ostringstream ss;
+    for (const auto& dependency: funcDef.requirements)
+    {
+        auto dependencyFunc = _scope->getFunction(dependency);
+        if (dependencyFunc == nullptr)
+        {
+            throw std::logic_error(
+                "Dependency function \"" + dependency + "\" not found."
+            );
+        }
+
+        ss << buildFunction(*dependencyFunc) << std::endl;
+    }
+
+    return ss.str();
 }
 
 std::string GLSLCodeBuilder::buildMain()
@@ -119,9 +134,45 @@ std::string GLSLCodeBuilder::buildMain()
     buildInputsOutputs();
 
     std::ostringstream ss;
+    ss << buildDependencies(*_mainFunction);
     ss << _cache.preMainCode.str() << std::endl;
     ss << buildMainFunctionCode();
     ss << _cache.postMainCode.str() << std::endl;
+    return ss.str();
+}
+
+std::string GLSLCodeBuilder::buildFunction(const FunctionDefinition& funcDef)
+{
+    if (funcDef.outputVariables.size() != 1)
+    {
+        throw std::logic_error(
+            "Function \"" + funcDef.name
+            + "\" used as standard function should return exactly one value."
+        );
+    }
+
+    std::ostringstream ss;
+    ss << buildDependencies(funcDef);
+    ss << funcDef.outputVariables[0].type.name << " " << funcDef.name;
+    ss << "(";
+
+    const auto numInputs = funcDef.inputVariables.size();
+    for (auto i = 0; i < numInputs; ++i)
+    {
+        ss << funcDef.inputVariables[i].type.name << " "
+            << funcDef.inputVariables[i].name;
+
+        if (i + 1 < numInputs)
+        {
+            ss << ", ";
+        }
+    }
+
+    ss << ") {" << funcDef.outputVariables[0].type.name << " "
+        << funcDef.outputVariables[0].name << ";" << std::endl
+        << funcDef.code
+        << "return " << funcDef.outputVariables[0].name << ";}" << std::endl;
+
     return ss.str();
 }
 
