@@ -1,40 +1,26 @@
 #include <cstdio>
+#include <cstdlib>
+#include <iostream>
 #include <string>
 #include <sstream>
-#include "ShabuiParser.hxx"
-#include "ShabuiScanner.hpp"
-#include "ShabuiAst.hpp"
-#include "StringUtils.hpp"
-#include "GLSLCodeBuilder.hpp"
+#include "GLSLLoader.hpp"
 
 int main(int argc, char **argv)
 {
-    std::shared_ptr<sb::ParserOutput> output =
-        std::make_shared<sb::ParserOutput>();
-
-    sb::shabuiScanner scanner(&std::cin);
-    sb::shabuiParser parser(&scanner, output.get());
-
-    try
+    if (argc == 1)
     {
-        parser.parse();
-
-        sb::GLSLCodeBuilder builder;
-        auto result = builder.build(
-            output->getGlobalScope(),
-            output->getGlobalScope().shaders[0]
-        );
-
-        std::cerr << "Vertex Shader Output:" << std::endl;
-        std::cerr << result.vertexShaderCode << std::endl;
-
-        std::cerr << std::endl << "Fragment Shader Output:" << std::endl;
-        std::cerr << result.fragmentShaderCode << std::endl;
-    }
-    catch (sb::shabuiParser::syntax_error& e)
-    {
-        std::cerr << e.what() << std::endl;
+        std::cout << "usage: " << argv[0] << " shaderfile";
+        return EXIT_FAILURE;
     }
 
-    return 0;
+    sb::GLSLLoader loader;
+    auto result = loader.loadFile(argv[1]);
+
+    std::cerr << "Vertex Shader Output:" << std::endl;
+    std::cerr << result.vertexShaderCode << std::endl;
+
+    std::cerr << "Fragment Shader Output:" << std::endl;
+    std::cerr << result.fragmentShaderCode << std::endl;
+
+    return EXIT_SUCCESS;
 }

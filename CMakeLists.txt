@@ -22,6 +22,7 @@ add_flex_bison_dependency(ShabuiScanner ShabuiParser)
 
 add_library(${PROJECT_NAME_LIB}
     source/GLSLCodeBuilder.cpp
+    source/GLSLLoader.cpp
     source/ParserOutput.cpp
     source/ShabuiAst.cpp
     source/StringUtils.cpp
