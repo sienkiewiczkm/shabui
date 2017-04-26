@@ -43,11 +43,12 @@
 
 %token <std::string> IDENTIFIER
 %token <std::string> STRING_LITERAL
-%token <std::string> GLSL_CODE_BLOCK
 %token <std::string> GLSL_TYPE
+%token <std::string> GLSL_CODE_PART
 %token <std::string> LOCATION
 
 %token VERSION SHADER FUNC SHARED GLSL STRUCT REQUIRES
+%token GLSL_START GLSL_END
 %token COLON
 
 %token <int> INTEGER_CONSTANT
@@ -70,6 +71,7 @@
 %type <VariableProperty> var_property
 
 %type <TypeDescription> var_type
+%type <std::string> glsl_code
 
 %start root
 
@@ -127,12 +129,12 @@ shader_properties_list
     ;
 
 shader_shared_code_property
-    : SHARED GLSL_CODE_BLOCK { $$ = $2; }
+    : SHARED glsl_code { $$ = $2; }
     ;
 
 function_definition
     : FUNC IDENTIFIER '(' optional_variables_definition_list ')' ':'
-        variable_definition GLSL_CODE_BLOCK requirements_block_opt
+        variable_definition glsl_code requirements_block_opt
     {
         $$ = FunctionDefinition{};
         $$.name = $2;
@@ -142,7 +144,7 @@ function_definition
         $$.requirements = $9;
     }
     | FUNC IDENTIFIER '(' optional_variables_definition_list ')' ':'
-        '(' variables_definition_list ')' GLSL_CODE_BLOCK requirements_block_opt
+        '(' variables_definition_list ')' glsl_code requirements_block_opt
     {
         $$ = FunctionDefinition{};
         $$.name = $2;
@@ -222,6 +224,11 @@ version_marker
 
 command_separator
     : ';'
+    ;
+
+glsl_code
+    : glsl_code GLSL_CODE_PART { $$ = $1 + $2; }
+    | GLSL_CODE_PART { $$ = $1; }
     ;
 
 %%

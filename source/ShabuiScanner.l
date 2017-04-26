@@ -1,6 +1,7 @@
 %option c++
 %option nodefault
 %option noyywrap
+%option yylineno
 
 %{
 #include <stdexcept>
@@ -24,11 +25,18 @@
 #define YIELD_STRING(tok) YIELD_TOKEN(tok, YY_STRING, std::string);
 %}
 
+%x IN_GLSL_BLOCK
+
 %%
 
 %{
     yylloc->step();
 %}
+
+<INITIAL>"<<<" { BEGIN(IN_GLSL_BLOCK); }
+<IN_GLSL_BLOCK>">>>" { BEGIN(INITIAL); }
+<IN_GLSL_BLOCK>[^>]+ { YIELD_STRING(GLSL_CODE_PART); }
+<IN_GLSL_BLOCK>>>? { YIELD_STRING(GLSL_CODE_PART); }
 
 "version" { YIELD_TOKEN_MARKER(VERSION); }
 "shader"  { YIELD_TOKEN_MARKER(SHADER); }
@@ -51,11 +59,6 @@
 \"(\\.|[^\\"])*\" {
     auto text = stripKnownEndings(YY_STRING, "\"", "\"");
     YIELD_TOKEN(STRING_LITERAL, text, std::string);
-}
-
-\<\<\<([^\>\>\>]|\n|\r\n)*\>\>\> {
-    auto text = stripKnownEndings(YY_STRING, "<<<", ">>>");
-    YIELD_TOKEN(GLSL_CODE_BLOCK, text, std::string);
 }
 
 [0-9]+ {

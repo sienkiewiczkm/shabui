@@ -35,7 +35,8 @@ GLSLShaderProgramCode GLSLLoader::load(std::istream& input) const
     catch (sb::shabuiParser::syntax_error& e)
     {
         // todo: extract exception from parser and remove this printout
-        std::cerr << e.what() << std::endl;
+        std::cerr << "line " << e.location.begin.line << "-"
+            << e.location.end.line << " error: " << e.what() << std::endl;
         throw;
     }
 
