@@ -31,6 +31,7 @@ add_library(${PROJECT_NAME}
 )
 
 target_compile_features(${PROJECT_NAME}
+    PUBLIC cxx_std_17
     PUBLIC cxx_auto_type
     PUBLIC cxx_rvalue_references
 )

@@ -47,7 +47,7 @@
 %token <std::string> GLSL_CODE_PART
 %token <std::string> LOCATION
 
-%token VERSION SHADER FUNC SHARED GLSL STRUCT REQUIRES
+%token VERSION SHADER FUNC SHARED GLSL STRUCT REQUIRES INCLUDE
 %token GLSL_START GLSL_END
 %token COLON
 
@@ -72,6 +72,7 @@
 
 %type <TypeDescription> var_type
 %type <std::string> glsl_code
+%type <std::string> include_file
 
 %start root
 
@@ -89,8 +90,13 @@ global_statements_list
 
 global_statement
     : version_marker
+    | include_file { cb->addDependency($1); }
     | function_definition { cb->addFunctionDefinition($1); }
     | shader_definition { cb->addShaderDefinition($1); }
+    ;
+
+include_file
+    : INCLUDE STRING_LITERAL { $$ = $2; }
     ;
 
 shader_definition

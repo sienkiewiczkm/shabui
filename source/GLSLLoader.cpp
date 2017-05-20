@@ -1,3 +1,4 @@
+#include <iostream>
 #include <fstream>
 #include <memory>
 #include <stdexcept>
@@ -9,24 +10,115 @@
 namespace sb
 {
 
-GLSLShaderProgramCode GLSLLoader::loadFile(const std::string& filename) const
+GLSLLoaderFileDependencyResolver::GLSLLoaderFileDependencyResolver(
+    std::string basePath
+):
+    _basePath{basePath}
 {
-    std::ifstream shaderFile{filename};
-    if (!shaderFile.is_open())
+}
+
+std::unique_ptr<std::istream> GLSLLoaderFileDependencyResolver::getDependency(
+    std::string dependencyName
+)
+{
+    // todo: fix it
+    auto olddep = dependencyName;
+    auto lastSeperatorIdx = _basePath.find_last_of("/\\");
+    if (lastSeperatorIdx != std::string::npos)
+    {
+        dependencyName =
+            _basePath.substr(0, lastSeperatorIdx+1) + dependencyName;
+    }
+
+    std::cerr << "loading dependency: \"" << dependencyName << "\""
+        << std::endl;
+    std::cerr << "original: \"" << olddep << "\"" << std::endl;
+
+    auto fileHandlePtr = std::unique_ptr<std::ifstream>(
+        new std::ifstream(dependencyName)
+    );
+
+    if (!fileHandlePtr->is_open())
+        return nullptr;
+
+    return std::unique_ptr<std::istream>(std::move(fileHandlePtr));
+}
+
+GLSLLoader::GLSLLoader(GLSLLoaderDependencyResolver& dependencyResolver):
+    _dependencyResolver{dependencyResolver}
+{
+}
+
+
+GLSLShaderProgramCode GLSLLoader::loadFile(
+    const std::string& filename
+)
+{
+    std::ifstream filestream{filename};
+
+    if (!filestream.is_open())
     {
         throw std::invalid_argument{
             "Requested file \"" + filename + "\" cannot be opened."
         };
     }
 
-    return load(shaderFile);
+    return load(filestream);
 }
 
-GLSLShaderProgramCode GLSLLoader::load(std::istream& input) const
+GLSLShaderProgramCode GLSLLoader::load(std::istream& input)
 {
-    auto output = std::make_shared<sb::ParserOutput>();
+    _output = std::make_shared<sb::ParserOutput>();
+
+    loadStream(input);
+
+    auto& scope = _output->getGlobalScope();
+
+    if (_output->getGlobalScope().shaders.size() != 1)
+    {
+        throw std::logic_error{
+            "File must contain exactly one shader definition in current version"
+        };
+    }
+
+    _output->startDependencyBuilding();
+
+    std::set<std::string> loadedFiles;
+    for (auto it = std::begin(scope.dependencies);
+        it != std::end(scope.dependencies);
+        ++it)
+    {
+        auto dep = *it;
+
+        if (loadedFiles.find(dep) != std::end(loadedFiles))
+            continue;
+
+        loadedFiles.insert(dep);
+
+        auto dependencyStream = _dependencyResolver.getDependency(dep);
+        if (dependencyStream == nullptr)
+        {
+            throw std::logic_error{
+                "Couldn't find dependency: " + dep
+            };
+        }
+
+        loadStream(*dependencyStream);
+    }
+
+    sb::GLSLCodeBuilder codeBuilder;
+    auto code = codeBuilder.build(
+        _output->getGlobalScope(),
+        _output->getGlobalScope().shaders[0]
+    );
+
+    return code;
+}
+
+void GLSLLoader::loadStream(std::istream& input)
+{
     sb::shabuiScanner scanner{&input};
-    sb::shabuiParser parser{&scanner, output.get()};
+    sb::shabuiParser parser{&scanner, _output.get()};
 
     try
     {
@@ -39,21 +131,6 @@ GLSLShaderProgramCode GLSLLoader::load(std::istream& input) const
             << e.location.end.line << " error: " << e.what() << std::endl;
         throw;
     }
-
-    if (output->getGlobalScope().shaders.size() != 1)
-    {
-        throw std::logic_error{
-            "File must contain exactly one shader definition in current version"
-        };
-    }
-
-    sb::GLSLCodeBuilder codeBuilder;
-    auto code = codeBuilder.build(
-        output->getGlobalScope(),
-        output->getGlobalScope().shaders[0]
-    );
-
-    return code;
 }
 
 }

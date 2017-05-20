@@ -4,14 +4,39 @@
 namespace sb
 {
 
+ParserOutput::ParserOutput():
+    _isVersionSet{false},
+    _isGLSLVersionSet{false},
+    _dependencyLoadMode{false}
+{
+}
+
+void ParserOutput::addDependency(const std::string& file)
+{
+    _globalScope.dependencies.push_back(file);
+}
+
 void ParserOutput::setVersion(int major)
 {
+    _isVersionSet = true;
 }
 
 void ParserOutput::setGLSLVersion(int major, std::string profile)
 {
-    _globalScope.glslVersion = major;
-    _globalScope.glslProfileName = profile;
+    if (!_isGLSLVersionSet)
+    {
+        _globalScope.glslVersion = major;
+        _globalScope.glslProfileName = profile;
+        _isGLSLVersionSet = true;
+    }
+    else
+    {
+        if (_globalScope.glslVersion != major
+            || _globalScope.glslProfileName != profile)
+        {
+            std::cerr << "warning: include version doesn't match target";
+        }
+    }
 }
 
 void ParserOutput::addFunctionDefinition(
@@ -31,6 +56,11 @@ void ParserOutput::addFunctionDefinition(
 void ParserOutput::addShaderDefinition(const ShaderDefinition& shaderDefinition)
 {
     _globalScope.shaders.push_back(shaderDefinition);
+}
+
+void ParserOutput::startDependencyBuilding()
+{
+    _dependencyLoadMode = true;
 }
 
 }

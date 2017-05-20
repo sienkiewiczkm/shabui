@@ -13,7 +13,8 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    sb::GLSLLoader loader;
+    sb::GLSLLoaderFileDependencyResolver resolver{argv[1]};
+    sb::GLSLLoader loader{resolver};
     auto result = loader.loadFile(argv[1]);
 
     std::cerr << "Vertex Shader Output:" << std::endl;

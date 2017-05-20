@@ -73,6 +73,7 @@ struct ShabuiScope
     std::string glslProfileName;
     std::vector<FunctionDefinition> functions;
     std::vector<ShaderDefinition> shaders;
+    std::vector<std::string> dependencies;
 
     const FunctionDefinition* getFunction(const std::string& name) const;
 };
