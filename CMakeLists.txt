@@ -48,3 +48,17 @@ add_executable(${PROJECT_NAME_CLI}
 target_link_libraries(${PROJECT_NAME_CLI}
     PRIVATE ${PROJECT_NAME}
 )
+
+enable_testing()
+file(GLOB TEST_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} test/*.cpp)
+
+foreach(testSrc ${TEST_SRCS})
+  get_filename_component(testName ${testSrc} NAME_WE)
+  add_executable(${testName} ${testSrc})
+  target_link_libraries(${testName} ${PROJECT_NAME})
+  add_test(
+    NAME ${testName}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test
+    COMMAND ${testName}
+  )
+endforeach(testSrc)

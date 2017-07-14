@@ -1,0 +1,47 @@
+version 1;
+version glsl 330 core;
+
+func inout_function_test(inout vec3 L[3], out int n): float result
+<<<
+  L[0] = vec3(1.0, 0.0, 0.0);
+  L[1] = vec3(0.0, 1.0, 0.0);
+  L[2] = vec3(0.0, 0.0, 1.0);
+  n = 1;
+  result = 0.8;
+>>>;
+
+shader "InOut Function Test"
+{
+    shared
+    <<<
+    >>>;
+
+    struct vertexLayout
+    {
+        vec3 position {location = 0}
+    };
+
+    struct vertexOutput
+    {
+        vec3 localPosition
+    };
+
+    func vertex(vertexLayout vertex): vertexOutput result
+    <<<
+        result.localPosition = vertex.position;
+        gl_Position =  vec4(vertex.position, 1.0);
+    >>>;
+
+    func fragment(vertexOutput vsOut): vec4 result
+    <<<
+        vec3 colors[3];
+        colors[0] = vec3(1.0, 1.0, 1.0);
+        colors[1] = vec3(1.0, 1.0, 1.0);
+        colors[2] = vec3(1.0, 1.0, 1.0);
+
+        int n;
+        float res = inout_function_test(colors, n)
+
+        result = res * colors[n];
+    >>> requires { inout_function_test };
+};
