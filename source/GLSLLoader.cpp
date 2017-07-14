@@ -30,10 +30,6 @@ std::unique_ptr<std::istream> GLSLLoaderFileDependencyResolver::getDependency(
             _basePath.substr(0, lastSeperatorIdx+1) + dependencyName;
     }
 
-    std::cerr << "loading dependency: \"" << dependencyName << "\""
-        << std::endl;
-    std::cerr << "original: \"" << olddep << "\"" << std::endl;
-
     auto fileHandlePtr = std::unique_ptr<std::ifstream>(
         new std::ifstream(dependencyName)
     );

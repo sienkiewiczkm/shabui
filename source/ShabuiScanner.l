@@ -49,6 +49,10 @@
 
 "location" { YIELD_STRING(LOCATION); }
 
+"in"    { YIELD_STRING(PARAMETER_TYPE); }
+"out"   { YIELD_STRING(PARAMETER_TYPE); }
+"inout" { YIELD_STRING(PARAMETER_TYPE); }
+
 "void"                   { YIELD_STRING(GLSL_TYPE); }
 "bool"                   { YIELD_STRING(GLSL_TYPE); }
 "float"                  { YIELD_STRING(GLSL_TYPE); }

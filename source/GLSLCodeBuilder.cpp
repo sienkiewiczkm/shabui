@@ -159,8 +159,14 @@ std::string GLSLCodeBuilder::buildFunction(const FunctionDefinition& funcDef)
     const auto numInputs = funcDef.inputVariables.size();
     for (auto i = 0; i < numInputs; ++i)
     {
-        ss << funcDef.inputVariables[i].type.name << " "
-            << funcDef.inputVariables[i].name;
+        const auto& variable = funcDef.inputVariables[i];
+        ss << variable.option << " " << variable.type.name << " "
+            << variable.name;
+
+        if (variable.arraySize > 0)
+        {
+            ss << "[" << variable.arraySize << "]";
+        }
 
         if (i + 1 < numInputs)
         {
@@ -263,8 +269,15 @@ std::string GLSLCodeBuilder::buildDecoratedVarList(
             ss << "layout(location=" << varDef.properties[0].value << ") ";
         }
 
-        ss << varDecorator << " ";
-        ss << varDef.type.name << " " << varDef.name << ";" << std::endl;
+        ss << varDecorator << " " << varDef.option;
+        ss << varDef.type.name << " " << varDef.name;
+
+        if (varDef.arraySize > 0)
+        {
+            ss << "[" << varDef.arraySize << "]";
+        }
+
+        ss << ";" << std::endl;
     }
 
     return ss.str();

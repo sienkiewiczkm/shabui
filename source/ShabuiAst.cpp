@@ -20,16 +20,22 @@ TypeDescription::TypeDescription(
 
 VariableDefinition::VariableDefinition():
     name{},
-    type{}
+    type{},
+    arraySize{-1}
 {
 }
 
 VariableDefinition::VariableDefinition(
     const std::string& name,
-    const TypeDescription& type
+    const TypeDescription& type,
+    const std::string& option,
+    const int arraySize
+
 ):
     name{name},
-    type{type}
+    type{type},
+    option{option},
+    arraySize{arraySize}
 {
 }
 

@@ -2,6 +2,5 @@
 
 int main() {
     auto code = compile("inoutFunctionParamsTest.sbl");
-    std::cerr << code.vertexShaderCode << std::endl << code.fragmentShaderCode;
-    return EXIT_FAILURE;
+    return EXIT_SUCCESS;
 }

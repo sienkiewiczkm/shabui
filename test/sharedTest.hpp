@@ -4,7 +4,8 @@
 
 sb::GLSLShaderProgramCode compile(const std::string& filename) {
     try {
-        sb::GLSLLoader loader;
+        sb::GLSLLoaderFileDependencyResolver resolver("");
+        sb::GLSLLoader loader(resolver);
         auto code = loader.loadFile(filename);
         return code;
     } catch (std::invalid_argument &arg) {

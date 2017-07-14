@@ -34,10 +34,17 @@ struct VariableProperty
 struct VariableDefinition
 {
     VariableDefinition();
-    VariableDefinition(const std::string& name, const TypeDescription& type);
+    VariableDefinition(
+        const std::string& name,
+        const TypeDescription& type,
+        const std::string& option = {},
+        const int arraySize = -1
+    );
 
     std::string name;
     TypeDescription type;
+    std::string option;
+    int arraySize; // if -1 then it's not an array
     std::vector<VariableProperty> properties;
 };
 

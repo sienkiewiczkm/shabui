@@ -46,6 +46,7 @@
 %token <std::string> GLSL_TYPE
 %token <std::string> GLSL_CODE_PART
 %token <std::string> LOCATION
+%token <std::string> PARAMETER_TYPE
 
 %token VERSION SHADER FUNC SHARED GLSL STRUCT REQUIRES INCLUDE
 %token GLSL_START GLSL_END
@@ -72,7 +73,11 @@
 
 %type <TypeDescription> var_type
 %type <std::string> glsl_code
+%type <std::string> parameter_type_opt
 %type <std::string> include_file
+
+%type <int> array_definition
+%type <int> array_definition_opt
 
 %start root
 
@@ -203,12 +208,20 @@ variables_definition_list
     ;
 
 variable_definition
-    : var_type IDENTIFIER { $$ = VariableDefinition{$2, $1}; }
-    | var_type IDENTIFIER '{' var_property '}'
+    : parameter_type_opt var_type IDENTIFIER array_definition_opt
     {
-        $$ = VariableDefinition{$2, $1};
-        $$.properties.push_back($4);
+        $$ = VariableDefinition{$3, $2, $1, $4};
     }
+    | parameter_type_opt var_type IDENTIFIER '{' var_property '}'
+    {
+        $$ = VariableDefinition{$3, $2, $1};
+        $$.properties.push_back($5);
+    }
+    ;
+
+parameter_type_opt
+    : %empty { $$ = {}; }
+    | PARAMETER_TYPE { $$ = $1; }
     ;
 
 var_type
@@ -236,6 +249,15 @@ glsl_code
     : glsl_code GLSL_CODE_PART { $$ = $1 + $2; }
     | GLSL_CODE_PART { $$ = $1; }
     ;
+
+array_definition_opt
+  : %empty { $$ = -1; }
+  | array_definition { $$ = $1; }
+  ;
+
+array_definition
+  : '[' INTEGER_CONSTANT ']' { $$ = $2; }
+  ;
 
 %%
 
